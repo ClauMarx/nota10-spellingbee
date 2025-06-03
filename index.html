@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<title>Nota 10 - Spelling Bee</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #fffbe6;
+        color: #333;
+        text-align: center;
+        padding: 50px;
+    }
+    h1 {
+        color: #ffbb00;
+        text-shadow: 1px 1px 3px #aa8800;
+    }
+    #container {
+        background: #fff8c4;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 500px;
+        margin: 0 auto;
+        box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+        position: relative;
+    }
+    input {
+        font-size: 18px;
+        padding: 10px;
+        width: 80%;
+        border-radius: 10px;
+        border: 2px solid #ffbb00;
+        margin-bottom: 20px;
+    }
+    button {
+        font-size: 18px;
+        background: #ffbb00;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 25px;
+        cursor: pointer;
+        color: #fff;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+    button:hover {
+        background: #ffaa00;
+    }
+    #spelling {
+        font-size: 28px;
+        margin-top: 30px;
+        letter-spacing: 10px;
+        color: #cc9900;
+        font-weight: bold;
+        user-select: none;
+    }
+    /* Abelhas simples */
+    .bee {
+        position: absolute;
+        width: 50px;
+        animation: fly 5s infinite alternate ease-in-out;
+    }
+    .bee1 { top: 10px; left: 10px; animation-delay: 0s; }
+    .bee2 { top: 40px; right: 15px; animation-delay: 2s; }
+    .bee3 { bottom: 20px; left: 60px; animation-delay: 4s; }
+    @keyframes fly {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        100% { transform: translate(20px, 15px) rotate(15deg); }
+    }
+</style>
+</head>
+<body>
+
+<h1>Nota 10 - Spelling Bee 🐝</h1>
+
+<div id="container">
+    <input id="wordInput" type="text" placeholder="Digite uma palavra em inglês" />
+    <br/>
+    <button onclick="playSpelling()">Ouvir Palavra e Soletração</button>
+    <div id="spelling"></div>
+    <!-- Abelhas decorativas -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Apis_mellifera_2_Luc_Viatour.jpg/50px-Apis_mellifera_2_Luc_Viatour.jpg" class="bee bee1" alt="Abelha" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Apis_mellifera_2_Luc_Viatour.jpg/50px-Apis_mellifera_2_Luc_Viatour.jpg" class="bee bee2" alt="Abelha" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Apis_mellifera_2_Luc_Viatour.jpg/50px-Apis_mellifera_2_Luc_Viatour.jpg" class="bee bee3" alt="Abelha" />
+</div>
+
+<script>
+function speak(text, callback) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.onend = callback;
+    window.speechSynthesis.speak(utterance);
+}
+
+function playSpelling() {
+    const input = document.getElementById('wordInput');
+    const word = input.value.trim();
+    const spellingDiv = document.getElementById('spelling');
+    if (!word) {
+        alert('Por favor, digite uma palavra.');
+        return;
+    }
+    spellingDiv.textContent = '';
+    // Fala a palavra inteira primeiro
+    speak(word, () => {
+        // Depois soletra letra por letra
+        const letters = word.toUpperCase().split('');
+        let i = 0;
+        function spellNext() {
+            if (i < letters.length) {
+                spellingDiv.textContent += letters[i] + (i === letters.length -1 ? '' : ' - ');
+                speak(letters[i], () => {
+                    i++;
+                    spellNext();
+                });
+            }
+        }
+        spellNext();
+    });
+}
+</script>
+
+</body>
+</html>
